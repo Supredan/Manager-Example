@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 @TableName("s_medicine")
 public class Medicine {
-
     @TableId(value = "id")
     private Long id;
     private String name;

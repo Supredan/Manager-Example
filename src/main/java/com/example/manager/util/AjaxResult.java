@@ -1,11 +1,5 @@
 package com.example.manager.util;
 
-/**
- * @Classname AjaxResult
- * @Description ajax json 返回数据
- * @Date 2019/6/25 10:21
- * @Created by WDD
- */
 public class AjaxResult {
     private boolean success;
     private String message;

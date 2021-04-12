@@ -3,8 +3,6 @@ package com.example.manager.util;
 /**
  * @Classname SnGenerateUtil
  * @Description 随机生成学号
- * @Date 2019/6/27 20:17
- * @Created by WDD
  */
 public class SnGenerateUtil {
     public static String generateSn(int clazzId){

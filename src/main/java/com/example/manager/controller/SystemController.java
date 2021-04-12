@@ -1,7 +1,11 @@
 package com.example.manager.controller;
 
 import com.example.manager.pojo.Admin;
+import com.example.manager.pojo.Doctor;
+import com.example.manager.pojo.Patient;
 import com.example.manager.service.AdminService;
+import com.example.manager.service.DoctorService;
+import com.example.manager.service.PatientService;
 import com.example.manager.util.AjaxResult;
 import com.example.manager.util.Const;
 import com.example.manager.util.CpachaUtil;
@@ -17,12 +21,6 @@ import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-/**
- * @Classname SystemController
- * @Description None
- * @Date 2019/6/24 19:25
- * @Created by WDD
- */
 @Controller
 @RequestMapping("/system")
 public class SystemController {
@@ -30,9 +28,9 @@ public class SystemController {
     @Autowired
     private AdminService adminService;
     @Autowired
-    private StudentService studentService;
+    private DoctorService doctorService;
     @Autowired
-    private TeacherService teacherService;
+    private PatientService patientService;
 
     /**
      * 跳转登录界面
@@ -84,7 +82,7 @@ public class SystemController {
                 Admin admin = new Admin();
                 admin.setPassword(password);
                 admin.setUsername(username);
-                Admin ad = adminService.findByAdmin(admin);
+                Admin ad = adminService.findByAdminNaPs(admin);
                 if(StringUtils.isEmpty(ad)){
                     ajaxResult.setSuccess(false);
                     ajaxResult.setMessage("用户名或密码错误");
@@ -96,32 +94,32 @@ public class SystemController {
                 break;
             }
             case "2":{
-                Student student = new Student();
-                student.setPassword(password);
-                student.setUsername(username);
-                Student st = studentService.findByStudent(student);
+                Patient patient = new Patient();
+                patient.setPassword(password);
+                patient.setUsername(username);
+                Patient st = patientService.findByPatientNaPs(patient);
                 if(StringUtils.isEmpty(st)){
                     ajaxResult.setSuccess(false);
                     ajaxResult.setMessage("用户名或密码错误");
                     return ajaxResult;
                 }
                 ajaxResult.setSuccess(true);
-                session.setAttribute(Const.STUDENT,st);
-                session.setAttribute(Const.USERTYPE,"2");
+                session.setAttribute(Const.PATIENT, st);
+                session.setAttribute(Const.USERTYPE, "2");
                 break;
             }
             case "3":{
-                Teacher teacher = new Teacher();
-                teacher.setPassword(password);
-                teacher.setUsername(username);
-                Teacher tr = teacherService.findByTeacher(teacher);
+                Doctor doctor = new Doctor();
+                doctor.setPassword(password);
+                doctor.setUsername(username);
+                Doctor tr = doctorService.findByDoctorNaPs(doctor);
                 if(StringUtils.isEmpty(tr)){
                     ajaxResult.setSuccess(false);
                     ajaxResult.setMessage("用户名或密码错误");
                     return ajaxResult;
                 }
                 ajaxResult.setSuccess(true);
-                session.setAttribute(Const.TEACHER,tr);
+                session.setAttribute(Const.DOCTOR,tr);
                 session.setAttribute(Const.USERTYPE,"3");
                 break;
             }
@@ -187,13 +185,11 @@ public class SystemController {
                                @RequestParam(value = "tid",defaultValue = "0")Integer tid){
         AjaxResult ajaxResult = new AjaxResult();
         if(sid != 0){
-            Student student = studentService.findById(sid);
-            ajaxResult.setImgurl(student.getPhoto());
+            Patient patient = patientService.findById(sid);
             return ajaxResult;
         }
         if(tid!=0){
-            Teacher teacher = teacherService.findById(tid);
-            ajaxResult.setImgurl(teacher.getPhoto());
+            Doctor doctor = doctorService.findById(tid);
             return ajaxResult;
         }
 
@@ -229,7 +225,7 @@ public class SystemController {
             }
             admin.setPassword(newpassword);
             try{
-                int count = adminService.editPswdByAdmin(admin);
+                int count = adminService.updateByAdmin(admin);
                 if(count > 0){
                     ajaxResult.setSuccess(true);
                     ajaxResult.setMessage("修改成功,请重新登录");
@@ -245,15 +241,15 @@ public class SystemController {
         }
         if(usertype.equals("2")){
             //学生
-            Student student = (Student)session.getAttribute(Const.STUDENT);
-            if(!password.equals(student.getPassword())){
+            Patient patient = (Patient) session.getAttribute(Const.PATIENT);
+            if(!password.equals(patient.getPassword())){
                 ajaxResult.setSuccess(false);
                 ajaxResult.setMessage("原密码错误");
                 return ajaxResult;
             }
-            student.setPassword(newpassword);
+            patient.setPassword(newpassword);
             try{
-                int count = studentService.editPswdByStudent(student);
+                int count = patientService.updateByPatient(patient);
                 if(count > 0){
                     ajaxResult.setSuccess(true);
                     ajaxResult.setMessage("修改成功,请重新登录");
@@ -269,15 +265,15 @@ public class SystemController {
         }
         if(usertype.equals("3")){
             //教师
-            Teacher teacher = (Teacher) session.getAttribute(Const.TEACHER);
-            if(!password.equals(teacher.getPassword())){
+            Doctor doctor = (Doctor) session.getAttribute(Const.DOCTOR);
+            if(!password.equals(doctor.getPassword())){
                 ajaxResult.setSuccess(false);
                 ajaxResult.setMessage("原密码错误");
                 return ajaxResult;
             }
-            teacher.setPassword(newpassword);
+            doctor.setPassword(newpassword);
             try{
-                int count = teacherService.editPswdByTeacher(teacher);
+                int count = doctorService.updateByDoctor(doctor);
                 if(count > 0){
                     ajaxResult.setSuccess(true);
                     ajaxResult.setMessage("修改成功,请重新登录");
